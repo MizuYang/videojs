@@ -9,7 +9,7 @@ import { defineAsyncComponent, reactive } from 'vue'
 
 const data = reactive([{
   id: 1,
-  name: 'Demo1',
+  name: 'Demo1基本使用',
   component: ''
 }])
 
