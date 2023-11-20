@@ -7,11 +7,18 @@
 <script setup>
 import { defineAsyncComponent, reactive } from 'vue'
 
-const data = reactive([{
-  id: 1,
-  name: 'Demo1基本使用',
-  component: ''
-}])
+const data = reactive([
+  {
+    id: 1,
+    name: 'Demo1基本使用',
+    component: ''
+  },
+  {
+    id: 2,
+    name: 'Demo2事件觸發',
+    component: ''
+  }
+])
 
 getComponents()
 

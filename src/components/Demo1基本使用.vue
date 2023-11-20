@@ -35,7 +35,7 @@ const videoOptions = {
 }
 
 onMounted(() => {
-  player.value = videojs('#video1', videoOptions, () => {
+  player.value = videojs('#video1', videoOptions, function () {
     console.log('影片準備完畢!', player.value)
   })
 })
