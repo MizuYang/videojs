@@ -17,6 +17,11 @@ const data = reactive([
     id: 2,
     name: 'Demo2事件觸發',
     component: ''
+  },
+  {
+    id: 3,
+    name: 'Demo3外觀更改',
+    component: ''
   }
 ])
 
