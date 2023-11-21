@@ -22,6 +22,11 @@ const data = reactive([
     id: 3,
     name: 'Demo3外觀更改',
     component: ''
+  },
+  {
+    id: 4,
+    name: 'Demo4用JS控制播放器',
+    component: ''
   }
 ])
 
