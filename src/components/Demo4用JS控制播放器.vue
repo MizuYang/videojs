@@ -100,6 +100,20 @@
           </button>
         </div>
       </div>
+
+      <!-- 第三排 -->
+      <div class="d-flex align-items-center my-5">
+        <!-- 取得當前播放時間 -->
+        <div>
+        <!-- <div class="border-start border-secondary ms-10 ps-10"> -->
+          <button type="button"
+                  class="btn btn-secondary"
+                  @click="updateStaticCurrentTime">取得當前播放時間
+            ( {{ staticCurrentTime }} )
+          </button>
+        </div>
+        <!-- 設定當前播放時間 -->
+      </div>
     </section>
   </section>
 </template>
@@ -136,6 +150,7 @@ const height = ref(0)
 const playbackRate = ref(1)
 const currentVideo = ref({ name: '影片1', type: 'mp4' })
 const isLoop = ref(false)
+const staticCurrentTime = ref(0)
 const videoOptions = {
   language: 'zh-TW',
   autoplay: true,
@@ -181,6 +196,9 @@ watchEffect(() => {
 
 onMounted(() => {
   videoPlayerInit()
+
+  setTimeout(() => {
+  }, 1000)
 })
 
 function videoPlayerInit () {
@@ -212,6 +230,8 @@ async function changeVideo ({ name, type }) {
       player.value?.playbackRate(playbackRate.value)
     }, 100)
   }
+  // 改變當前靜態時間
+  updateStaticCurrentTime()
 
   // 重新加載播放器，這樣更換的影片源才會生效
   // player.value.load()
@@ -224,6 +244,9 @@ async function download () {
 function loopSetup () {
   isLoop.value = !isLoop.value
   player.value.loop(isLoop.value)
+}
+function updateStaticCurrentTime () {
+  staticCurrentTime.value = player.value.currentTime()
 }
 </script>
 
