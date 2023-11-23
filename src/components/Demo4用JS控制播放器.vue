@@ -23,7 +23,7 @@
           {{ isPlaying?'暫停':'播放' }}
         </button>
         <!-- 播放器寬高 -->
-        <div class="d-flex border-start border-primary m-3 ms-10 ps-5">
+        <div class="d-flex border-start border-primary m-3 ms-10 ps-10 pe-5">
           <label for="dmeoWidth4" class="d-flex align-items-center">
             寬度
             <input type="number"
@@ -42,7 +42,7 @@
           </label>
         </div>
         <!-- 音量 -->
-        <div class="d-flex border-start border-end border-primary mx-3"
+        <div class="d-flex border-start border-primary mx-3 ps-10"
              style="min-width:215px;padding: 7px;">
           音量
           <input type="range" class="mx-2" v-model="volume">
@@ -51,13 +51,29 @@
       </div>
 
       <!-- 第二排 -->
-      <div class="my-5">
-        <button type="button"
-                class="btn btn-secondary me-4"
-                @click="player.requestFullscreen()">全螢幕</button>
-        <button type="button"
-                class="btn btn-secondary"
-                @click="enterAndLeave">進入全螢幕,一秒後離開全螢幕</button>
+      <div class="d-flex align-items-center my-5">
+        <!-- 切換影片源 -->
+        <div>
+          <button type="button"
+                  class="btn me-2"
+                  :class="currentVideoName==='mp4'?'btn-primary':'btn-secondary'"
+                  @click="changeVideo('mp4')">播放影片1</button>
+          <button type="button"
+                  class="btn"
+                  :class="currentVideoName==='有聲影片測試'?'btn-primary':'btn-secondary'"
+                  @click="changeVideo('有聲影片測試')">播放影片2</button>
+        </div>
+
+        <!-- 全螢幕 -->
+        <div class="border-start border-primary ms-10 ps-10">
+          <button type="button"
+                  class="btn btn-secondary me-4"
+                  @click="player.requestFullscreen()">全螢幕</button>
+          <button type="button"
+                  class="btn btn-secondary"
+                  @click="enterAndLeave">進入全螢幕,一秒後離開全螢幕</button>
+        </div>
+
       </div>
     </div>
   </section>
@@ -90,6 +106,7 @@ const isPlaying = ref(false)
 const volume = ref(100)
 const width = ref(0)
 const height = ref(0)
+const currentVideoName = ref('mp4')
 const videoOptions = {
   language: 'zh-TW',
   autoplay: true,
@@ -132,6 +149,16 @@ function videoPlayerInit () {
     })
   })
 }
+async function changeVideo (videoName) {
+  const { default: newSource } = await import(`../assets/files/${videoName}.mp4`)
+
+  player.value.src(newSource)
+
+  currentVideoName.value = videoName
+
+  // 重新加載播放器，這樣更換的影片源才會生效
+  // player.value.load()
+}
 </script>
 
 <style lang='scss' scope>
@@ -139,3 +166,5 @@ function videoPlayerInit () {
 .video-js .vjs-time-control{display:block;}
 .video-js .vjs-remaining-time{display: none;}
 </style>
+
+npm install file-saver --save
