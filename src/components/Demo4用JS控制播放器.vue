@@ -76,7 +76,7 @@
           <template v-for="value in playList" :key="value.name">
             <button type="button"
                     class="btn me-2"
-                    :class="currentVideo.name===value.name?'btn-primary':'btn-secondary'"
+                    :class="currentPlayer.name===value.name?'btn-primary':'btn-secondary'"
                     @click="changeVideo(value)">播放{{ value.name }}</button>
           </template>
         </div>
@@ -96,7 +96,7 @@
           <button type="button"
                   class="btn btn-success"
                   @click="download">
-            下載{{ currentVideo.name }}.{{ currentVideo.type }}
+            下載{{ currentPlayer.name }}.{{ currentPlayer.type }}
           </button>
         </div>
       </div>
@@ -124,10 +124,22 @@
             設定播放時間
           </button>
           <input type="number"
-                 class="form-control"
+                 class="form-control text-center"
                  placeholder="輸入秒"
                  v-model="setCurrentTime"
+                 min="0"
                  style="width:100px;">
+        </div>
+      </div>
+
+      <!-- 第四排 -->
+      <div class="d-flex align-items-center my-5">
+        <!-- 取得影片、音樂總時長 -->
+        <div>
+          <p class="text-secondary text-18 fw-bold-7">
+            {{ currentPlayer.type==='mp4'?'影片':'音樂' }}總時長
+            {{ totalDuration }}
+          </p>
         </div>
       </div>
     </section>
@@ -164,11 +176,12 @@ const volume = ref(100)
 const width = ref(0)
 const height = ref(0)
 const playbackRate = ref(1)
-const currentVideo = ref({ name: '影片1', type: 'mp4' })
+const currentPlayer = ref({ name: '影片1', type: 'mp4' })
 const isLoop = ref(false)
 const staticCurrentTime = ref(0)
 const dynamicCurrentTime = ref(0)
 const setCurrentTime = ref(0)
+const totalDuration = ref(0)
 const videoOptions = {
   language: 'zh-TW',
   autoplay: true,
@@ -214,9 +227,6 @@ watchEffect(() => {
 
 onMounted(() => {
   videoPlayerInit()
-
-  setTimeout(() => {
-  }, 1000)
 })
 
 function videoPlayerInit () {
@@ -236,6 +246,11 @@ function videoPlayerInit () {
     this.on('timeupdate', () => {
       dynamicCurrentTime.value = player.value.currentTime()
     })
+    // 在這裡取得影片的總時長
+    this.on('durationchange', function () {
+      totalDuration.value = player.value.duration()
+      console.log('影片總時長：', totalDuration.value)
+    })
   })
 }
 async function changeVideo ({ name, type }) {
@@ -243,8 +258,9 @@ async function changeVideo ({ name, type }) {
 
   player.value.src(newSource)
 
-  currentVideo.value.name = name
-  currentVideo.value.type = type
+  currentPlayer.value.name = name
+  currentPlayer.value.type = type
+  totalDuration.value = player.value.duration()
 
   // 調整影片速率
   if (playbackRate.value && player.value?.playbackRate) {
@@ -259,9 +275,9 @@ async function changeVideo ({ name, type }) {
   // player.value.load()
 }
 async function download () {
-  const { default: newSource } = await import(`../assets/files/${currentVideo.value.name}.${currentVideo.value.type}`)
+  const { default: newSource } = await import(`../assets/files/${currentPlayer.value.name}.${currentPlayer.value.type}`)
 
-  saveAs(newSource, currentVideo.value.name) // 下載的網址、下載的檔案名稱
+  saveAs(newSource, currentPlayer.value.name) // 下載的網址、下載的檔案名稱
 }
 function loopSetup () {
   isLoop.value = !isLoop.value
@@ -277,5 +293,3 @@ function updateStaticCurrentTime () {
 .video-js .vjs-time-control{display:block;}
 .video-js .vjs-remaining-time{display: none;}
 </style>
-
-npm install file-saver --save
