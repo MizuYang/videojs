@@ -7,7 +7,8 @@
       <video id="video3"
              class="video-js">
         <source src="@/assets/files/影片1.mp4" type="video/mp4">
-        <track src="../../public/字幕.vtt" kind="subtitles" label="中文字幕" srclang="zh" default>
+        <track src="/字幕.vtt" kind="subtitles" label="中文字幕" srclang="zh" default>
+        <!-- <track src="../../public/字幕.vtt" kind="subtitles" label="中文字幕" srclang="zh" default> -->
       </video>
     </section>
 
