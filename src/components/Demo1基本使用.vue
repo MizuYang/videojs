@@ -6,7 +6,6 @@
       <video id="video1"
              class="video-js">
         <source src="@/assets/files/影片1.mp4" type="video/mp4">
-        <source src="@/assets/files/影片1.webm" type="video/webm">
         <track src="../../public/字幕.vtt" kind="subtitles" label="中文字幕" srclang="zh" default>
       </video>
     </div>
