@@ -23,7 +23,7 @@
           {{ isPlaying?'暫停':'播放' }}
         </button>
         <!-- 播放器寬高 -->
-        <div class="d-flex border-start border-primary m-3 ms-10 ps-10 pe-5">
+        <div class="d-flex border-start border-secondary m-3 ms-10 ps-10 pe-5">
           <label for="dmeoWidth4" class="d-flex align-items-center">
             寬度
             <input type="number"
@@ -42,7 +42,7 @@
           </label>
         </div>
         <!-- 音量 -->
-        <div class="d-flex border-start border-primary mx-3 ps-10"
+        <div class="d-flex border-start border-secondary mx-3 ps-10"
              style="min-width:215px;padding:7px;">
           音量
           <input type="range" class="mx-2" v-model="volume" style="width:100px;">
@@ -66,18 +66,16 @@
       <div class="d-flex align-items-center my-5">
         <!-- 切換影片源 -->
         <div>
-          <button type="button"
-                  class="btn me-2"
-                  :class="currentVideoName==='影片1'?'btn-primary':'btn-secondary'"
-                  @click="changeVideo('影片1')">播放影片1</button>
-          <button type="button"
-                  class="btn"
-                  :class="currentVideoName==='影片2'?'btn-primary':'btn-secondary'"
-                  @click="changeVideo('影片2')">播放影片2</button>
+          <template v-for="value in playList" :key="value.name">
+            <button type="button"
+                    class="btn me-2"
+                    :class="currentVideo.name===value.name?'btn-primary':'btn-secondary'"
+                    @click="changeVideo(value)">播放{{ value.name }}</button>
+          </template>
         </div>
 
         <!-- 全螢幕 -->
-        <div class="border-start border-primary ms-10 ps-10">
+        <div class="border-start border-secondary ms-10 ps-10">
           <button type="button"
                   class="btn btn-secondary me-4"
                   @click="player.requestFullscreen()">全螢幕</button>
@@ -87,11 +85,11 @@
         </div>
 
         <!-- 下載影片 -->
-        <div class="border-start border-primary ms-10 ps-10">
+        <div class="border-start border-secondary ms-10 ps-10">
           <button type="button"
                   class="btn btn-success"
                   @click="download">
-            下載{{ currentVideoName }}
+            下載{{ currentVideo.name }}.{{ currentVideo.type }}
           </button>
         </div>
       </div>
@@ -100,7 +98,7 @@
 </template>
 
 <script setup>
-import { ref, watchEffect, onMounted } from 'vue'
+import { ref, reactive, watchEffect, onMounted } from 'vue'
 import videojs from 'video.js'
 import 'video.js/dist/video-js.css'
 
@@ -129,7 +127,7 @@ const volume = ref(100)
 const width = ref(0)
 const height = ref(0)
 const playbackRate = ref(1)
-const currentVideoName = ref('影片1')
+const currentVideo = ref({ name: '影片1', type: 'mp4' })
 const videoOptions = {
   language: 'zh-TW',
   autoplay: true,
@@ -137,6 +135,20 @@ const videoOptions = {
   width: '500',
   height: '200'
 }
+const playList = reactive({
+  video1: {
+    name: '影片1',
+    type: 'mp4'
+  },
+  video2: {
+    name: '影片2',
+    type: 'mp4'
+  },
+  audio1: {
+    name: '音樂1',
+    type: 'mp3'
+  }
+})
 
 // watchEffect
 watchEffect(() => {
@@ -178,12 +190,13 @@ function videoPlayerInit () {
     })
   })
 }
-async function changeVideo (videoName) {
-  const { default: newSource } = await import(`../assets/files/${videoName}.mp4`)
+async function changeVideo ({ name, type }) {
+  const { default: newSource } = await import(`../assets/files/${name}.${type}`)
 
   player.value.src(newSource)
 
-  currentVideoName.value = videoName
+  currentVideo.value.name = name
+  currentVideo.value.type = type
 
   // 調整影片速率
   if (playbackRate.value && player.value?.playbackRate) {
@@ -196,9 +209,9 @@ async function changeVideo (videoName) {
   // player.value.load()
 }
 async function download () {
-  const { default: newSource } = await import(`../assets/files/${currentVideoName.value}.mp4`)
+  const { default: newSource } = await import(`../assets/files/${currentVideo.value.name}.${currentVideo.value.type}`)
 
-  saveAs(newSource, currentVideoName.value) // 下載的網址、下載的檔案名稱
+  saveAs(newSource, currentVideo.value.name) // 下載的網址、下載的檔案名稱
 }
 </script>
 
