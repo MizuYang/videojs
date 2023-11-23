@@ -5,8 +5,8 @@
     <section class="text-center">
       <video id="video3"
              class="video-js">
-        <source src="@/assets/files/mp4.mp4" type="video/mp4">
-        <source src="@/assets/files/mp4.webm" type="video/webm">
+        <source src="@/assets/files/影片1.mp4" type="video/mp4">
+        <source src="@/assets/files/影片1.webm" type="video/webm">
         <track src="../../public/字幕.vtt" kind="subtitles" label="中文字幕" srclang="zh" default>
       </video>
     </section>
@@ -68,12 +68,12 @@
         <div>
           <button type="button"
                   class="btn me-2"
-                  :class="currentVideoName==='mp4'?'btn-primary':'btn-secondary'"
-                  @click="changeVideo('mp4')">播放影片1</button>
+                  :class="currentVideoName==='影片1'?'btn-primary':'btn-secondary'"
+                  @click="changeVideo('影片1')">播放影片1</button>
           <button type="button"
                   class="btn"
-                  :class="currentVideoName==='有聲影片測試'?'btn-primary':'btn-secondary'"
-                  @click="changeVideo('有聲影片測試')">播放影片2</button>
+                  :class="currentVideoName==='影片2'?'btn-primary':'btn-secondary'"
+                  @click="changeVideo('影片2')">播放影片2</button>
         </div>
 
         <!-- 全螢幕 -->
@@ -86,13 +86,21 @@
                   @click="enterAndLeave">進入全螢幕,一秒後離開全螢幕</button>
         </div>
 
+        <!-- 下載影片 -->
+        <div class="border-start border-primary ms-10 ps-10">
+          <button type="button"
+                  class="btn btn-success"
+                  @click="download">
+            下載{{ currentVideoName }}
+          </button>
+        </div>
       </div>
     </div>
   </section>
 </template>
 
 <script setup>
-import { ref, reactive, watchEffect, onMounted } from 'vue' // eslint-disable-line
+import { ref, watchEffect, onMounted } from 'vue'
 import videojs from 'video.js'
 import 'video.js/dist/video-js.css'
 
@@ -104,6 +112,8 @@ import '@videojs/themes/dist/fantasy/index.css'
 import '@videojs/themes/dist/forest/index.css'
 // Sea
 import '@videojs/themes/dist/sea/index.css'
+
+import { saveAs } from 'file-saver' // 僅取出下載的 API
 
 function enterAndLeave () {
   player.value.requestFullscreen()
@@ -119,7 +129,7 @@ const volume = ref(100)
 const width = ref(0)
 const height = ref(0)
 const playbackRate = ref(1)
-const currentVideoName = ref('mp4')
+const currentVideoName = ref('影片1')
 const videoOptions = {
   language: 'zh-TW',
   autoplay: true,
@@ -175,8 +185,20 @@ async function changeVideo (videoName) {
 
   currentVideoName.value = videoName
 
+  // 調整影片速率
+  if (playbackRate.value && player.value?.playbackRate) {
+    setTimeout(() => {
+      player.value?.playbackRate(playbackRate.value)
+    }, 100)
+  }
+
   // 重新加載播放器，這樣更換的影片源才會生效
   // player.value.load()
+}
+async function download () {
+  const { default: newSource } = await import(`../assets/files/${currentVideoName.value}.mp4`)
+
+  saveAs(newSource, currentVideoName.value) // 下載的網址、下載的檔案名稱
 }
 </script>
 
