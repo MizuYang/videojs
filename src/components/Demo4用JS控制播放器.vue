@@ -103,9 +103,13 @@
 
       <!-- 第三排 -->
       <div class="d-flex align-items-center my-5">
+        <!-- 動態的當前播放時間 -->
+        <p class="text-secondary fw-bold-7"
+           style="width:300px;">
+          動態取得當前播放時間 ( {{ dynamicCurrentTime }} )
+        </p>
         <!-- 取得當前播放時間 -->
-        <div>
-        <!-- <div class="border-start border-secondary ms-10 ps-10"> -->
+        <div class="border-start border-secondary ps-10">
           <button type="button"
                   class="btn btn-secondary"
                   @click="updateStaticCurrentTime">取得當前播放時間
@@ -113,6 +117,18 @@
           </button>
         </div>
         <!-- 設定當前播放時間 -->
+        <div class="d-flex align-items-center border-start border-secondary ms-10 ps-10">
+          <button type="button"
+                  class="btn btn-secondary"
+                  @click="player.currentTime(setCurrentTime)">
+            設定播放時間
+          </button>
+          <input type="number"
+                 class="form-control"
+                 placeholder="輸入秒"
+                 v-model="setCurrentTime"
+                 style="width:100px;">
+        </div>
       </div>
     </section>
   </section>
@@ -151,6 +167,8 @@ const playbackRate = ref(1)
 const currentVideo = ref({ name: '影片1', type: 'mp4' })
 const isLoop = ref(false)
 const staticCurrentTime = ref(0)
+const dynamicCurrentTime = ref(0)
+const setCurrentTime = ref(0)
 const videoOptions = {
   language: 'zh-TW',
   autoplay: true,
@@ -213,6 +231,10 @@ function videoPlayerInit () {
     })
     this.on('pause', () => {
       isPlaying.value = false
+    })
+    // 播放時連續觸發
+    this.on('timeupdate', () => {
+      dynamicCurrentTime.value = player.value.currentTime()
     })
   })
 }
