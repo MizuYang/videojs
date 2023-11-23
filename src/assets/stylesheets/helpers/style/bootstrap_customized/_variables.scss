@@ -343,7 +343,7 @@ $theme-colors: (
 // Quickly modify global styling by enabling or disabling optional features.
 
 $enable-caret:                true !default;
-$enable-rounded:              false;//mizu true !default;
+$enable-rounded:              true;//* mizu true !default;
 $enable-shadows:              false !default;
 $enable-gradients:            false !default;
 $enable-transitions:          true !default;
@@ -819,7 +819,7 @@ $container-max-widths: (
 // $btn-link-disabled-color:     $gray-600 !default;
 
 // // Allows for customizing button radius independently from global border radius
-// $btn-border-radius:           $border-radius !default;
+$btn-border-radius:           0px; //mizu // $border-radius !default;
 // $btn-border-radius-sm:        $border-radius-sm !default;
 // $btn-border-radius-lg:        $border-radius-lg !default;
 

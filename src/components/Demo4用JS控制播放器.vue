@@ -43,10 +43,22 @@
         </div>
         <!-- 音量 -->
         <div class="d-flex border-start border-primary mx-3 ps-10"
-             style="min-width:215px;padding: 7px;">
+             style="min-width:215px;padding:7px;">
           音量
-          <input type="range" class="mx-2" v-model="volume">
+          <input type="range" class="mx-2" v-model="volume" style="width:100px;">
           {{ volume }}
+        </div>
+
+        <!-- 速率 -->
+        <div class="d-flex-align-items-center">
+          <label for="customRange3" class="form-label">速率</label>
+          <input type="range"
+                 class="form-range mx-3 pt-5"
+                 min="1" max="5" step="1"
+                 id="customRange3"
+                 v-model="playbackRate"
+                 style="width:100px;">
+          {{ playbackRate }}
         </div>
       </div>
 
@@ -106,6 +118,7 @@ const isPlaying = ref(false)
 const volume = ref(100)
 const width = ref(0)
 const height = ref(0)
+const playbackRate = ref(1)
 const currentVideoName = ref('mp4')
 const videoOptions = {
   language: 'zh-TW',
@@ -127,6 +140,12 @@ watchEffect(() => {
     console.log('調整寬高', width.value, height.value)
     player.value.width(width.value)
     player.value.height(height.value)
+  }
+})
+watchEffect(() => {
+  if (playbackRate.value && player.value?.playbackRate) {
+    console.log('調整速率', playbackRate.value)
+    player.value.playbackRate(playbackRate.value)
   }
 })
 
