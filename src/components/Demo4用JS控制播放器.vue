@@ -2,6 +2,7 @@
   <section class="bg-gainsboro mb-3 p-10">
     <h2 class="text-20 mb-3">4. 用 JavaScript 控制播放器</h2>
 
+    <!-- 影片播放器 -->
     <section class="text-center">
       <video id="video3"
              class="video-js">
@@ -11,7 +12,8 @@
       </video>
     </section>
 
-    <div class="bg-whitesmoke mt-10 py-3"
+    <!-- 操控功能區塊 -->
+    <section class="bg-whitesmoke mt-10 py-3"
          style="padding: 0 200px;">
       <!-- 第一排 -->
       <div class="d-flex align-items-center">
@@ -48,9 +50,8 @@
           <input type="range" class="mx-2" v-model="volume" style="width:100px;">
           {{ volume }}
         </div>
-
         <!-- 速率 -->
-        <div class="d-flex-align-items-center">
+        <div class="d-flex-align-items-center border-start border-secondary ps-10">
           <label for="customRange3" class="form-label">速率</label>
           <input type="range"
                  class="form-range mx-3 pt-5"
@@ -59,6 +60,12 @@
                  v-model="playbackRate"
                  style="width:100px;">
           {{ playbackRate }}
+        </div>
+        <!-- 重複播放 -->
+        <div class="border-start border-secondary ms-10 ps-10">
+          <button type="button"
+                  class="btn btn-secondary"
+                  @click="loopSetup">{{ isLoop?'不重複播放':'重複播放' }}</button>
         </div>
       </div>
 
@@ -93,7 +100,7 @@
           </button>
         </div>
       </div>
-    </div>
+    </section>
   </section>
 </template>
 
@@ -128,6 +135,7 @@ const width = ref(0)
 const height = ref(0)
 const playbackRate = ref(1)
 const currentVideo = ref({ name: '影片1', type: 'mp4' })
+const isLoop = ref(false)
 const videoOptions = {
   language: 'zh-TW',
   autoplay: true,
@@ -212,6 +220,10 @@ async function download () {
   const { default: newSource } = await import(`../assets/files/${currentVideo.value.name}.${currentVideo.value.type}`)
 
   saveAs(newSource, currentVideo.value.name) // 下載的網址、下載的檔案名稱
+}
+function loopSetup () {
+  isLoop.value = !isLoop.value
+  player.value.loop(isLoop.value)
 }
 </script>
 
