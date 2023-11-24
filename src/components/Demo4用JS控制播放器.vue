@@ -13,8 +13,7 @@
     </section>
 
     <!-- 操控功能區塊 -->
-    <section class="bg-whitesmoke mt-10 py-3"
-         style="padding: 0 200px;">
+    <section class="d-flex flex-column align-items-center bg-whitesmoke mt-10 py-3">
       <!-- 第一排 -->
       <div class="d-flex align-items-center">
         <!-- 播放、暫停 -->

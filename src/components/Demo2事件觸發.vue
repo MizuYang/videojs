@@ -1,6 +1,9 @@
 <template>
   <section class="bg-gainsboro mb-3 p-10">
-    <h2 class="text-20 mb-3">2. 事件觸發</h2>
+    <h2 class="d-flex align-items-center text-20 mb-3">
+      2. 事件觸發
+      <p class="text-14 text-secondary ms-3">(監聽上方的播放器)</p>
+    </h2>
 
     <p>
       播放器物件建立、準備好時觸發：
